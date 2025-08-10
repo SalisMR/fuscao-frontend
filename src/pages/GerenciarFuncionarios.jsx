@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function GerenciarFuncionarios() {
   const { token, user } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
@@ -16,7 +18,7 @@ function GerenciarFuncionarios() {
   const [editando, setEditando] = useState(null);
 
   const carregar = async () => {
-    const res = await axios.get("http://localhost:5000/api/auth/usuarios", {
+    const res = await axios.get(`${API}/auth/usuarios`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setUsuarios(res.data);
@@ -31,11 +33,11 @@ function GerenciarFuncionarios() {
       };
 
       if (editando) {
-        await axios.put(`http://localhost:5000/api/auth/usuarios/${editando}`, payload, {
+        await axios.put(`${API}/auth/usuarios/${editando}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post("http://localhost:5000/api/auth/register", payload, {
+        await axios.post(`${API}/auth/register`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -69,7 +71,7 @@ function GerenciarFuncionarios() {
 
   const excluir = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este usuário?")) {
-      await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`, {
+      await axios.delete(`${API}/auth/usuarios/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       carregar();
@@ -87,7 +89,6 @@ function GerenciarFuncionarios() {
           <span className="text-red-500">Gerenciar</span> Funcionários e Admins
         </h1>
 
-        {/* Card de formulário */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-3">
           <div className="grid md:grid-cols-2 gap-3">
             <input
@@ -159,7 +160,6 @@ function GerenciarFuncionarios() {
           </div>
         </div>
 
-        {/* Tabela */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead>
@@ -188,7 +188,7 @@ function GerenciarFuncionarios() {
                     >
                       ✏️ Editar
                     </button>
-                    {user._id !== u._id && (
+                    {user?._id !== u._id && (
                       <button
                         onClick={() => excluir(u._id)}
                         className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white ring-1 ring-white/10"

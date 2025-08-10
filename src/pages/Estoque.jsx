@@ -10,6 +10,8 @@ import {
 } from "recharts";
 import { useAuth } from "../context/AuthContext";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 export default function Estoque() {
   const { token } = useAuth();
   const [estoque, setEstoque] = useState([]);
@@ -31,7 +33,7 @@ export default function Estoque() {
 
   const buscarEstoque = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/itens", {
+      const res = await axios.get(`${API}/itens`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEstoque(res.data);
@@ -42,7 +44,7 @@ export default function Estoque() {
 
   const buscarComandas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/comandas", {
+      const res = await axios.get(`${API}/comandas`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const agrupado = {};
@@ -76,12 +78,12 @@ export default function Estoque() {
     try {
       if (editando) {
         await axios.put(
-          `http://localhost:5000/api/itens/${editando._id}`,
+          `${API}/itens/${editando._id}`,
           novoItem,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        await axios.post("http://localhost:5000/api/itens", novoItem, {
+        await axios.post(`${API}/itens`, novoItem, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -96,7 +98,7 @@ export default function Estoque() {
   const removerItem = async (id) => {
     if (!confirm("Tem certeza que deseja remover este item?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/itens/${id}`, {
+      await axios.delete(`${API}/itens/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       buscarEstoque();
@@ -128,7 +130,6 @@ export default function Estoque() {
             <span className="text-red-500">Gestão</span> de Estoque
           </h1>
 
-          {/* Filtro tipo (visual atualizado) */}
           <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-1 flex">
             <button
               onClick={() => setTipoFiltro("produto")}
@@ -153,7 +154,6 @@ export default function Estoque() {
           </div>
         </div>
 
-        {/* Formulário para novo item / edição */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-red-500">
@@ -215,7 +215,6 @@ export default function Estoque() {
           </div>
         </div>
 
-        {/* Tabela de estoque atual */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 overflow-auto">
           <h2 className="text-lg font-semibold text-red-500 mb-2">Itens no Estoque</h2>
           <table className="w-full table-auto text-sm text-left">
@@ -268,7 +267,6 @@ export default function Estoque() {
           </table>
         </div>
 
-        {/* Gráfico de mais vendidos / realizados */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-red-500">
