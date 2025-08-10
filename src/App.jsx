@@ -21,7 +21,7 @@ function RequireAdmin({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-      {/* NÃO coloque Router aqui, o HashRouter já está em main.jsx */}
+      {/* NÃO coloque Router aqui; o HashRouter já está em main.jsx */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
