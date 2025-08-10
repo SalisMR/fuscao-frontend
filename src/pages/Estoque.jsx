@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
 import { useAuth } from "../context/AuthContext";
 
@@ -18,10 +13,7 @@ export default function Estoque() {
   const [itensMaisVendidos, setItensMaisVendidos] = useState([]);
   const [tipoFiltro, setTipoFiltro] = useState("produto");
   const [novoItem, setNovoItem] = useState({
-    nome: "",
-    tipo: "produto",
-    quantidade: 0,
-    valor: 0,
+    nome: "", tipo: "produto", quantidade: 0, valor: 0,
   });
   const [editando, setEditando] = useState(null);
 
@@ -48,27 +40,19 @@ export default function Estoque() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const agrupado = {};
-
       res.data.forEach((comanda) => {
         comanda.itens.forEach((item) => {
           const chave = item.nome?.trim();
           const tipoNormalizado = item.tipo === "produto" ? "produto" : "servico";
           if (!chave || !item.quantidade) return;
-
           if (!agrupado[chave]) {
-            agrupado[chave] = {
-              nome: chave,
-              tipo: tipoNormalizado,
-              quantidade: item.quantidade,
-            };
+            agrupado[chave] = { nome: chave, tipo: tipoNormalizado, quantidade: item.quantidade };
           } else {
             agrupado[chave].quantidade += item.quantidade;
           }
         });
       });
-
-      const lista = Object.values(agrupado);
-      setItensMaisVendidos(lista);
+      setItensMaisVendidos(Object.values(agrupado));
     } catch (err) {
       console.error("Erro ao buscar comandas:", err);
     }
@@ -77,11 +61,9 @@ export default function Estoque() {
   const salvarItem = async () => {
     try {
       if (editando) {
-        await axios.put(
-          `${API}/itens/${editando._id}`,
-          novoItem,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.put(`${API}/itens/${editando._id}`, novoItem, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       } else {
         await axios.post(`${API}/itens`, novoItem, {
           headers: { Authorization: `Bearer ${token}` },
@@ -134,9 +116,7 @@ export default function Estoque() {
             <button
               onClick={() => setTipoFiltro("produto")}
               className={`px-3 py-1 rounded-md text-sm transition ${
-                tipoFiltro === "produto"
-                  ? "bg-red-600"
-                  : "hover:bg-white/5 text-zinc-300"
+                tipoFiltro === "produto" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"
               }`}
             >
               Produtos
@@ -144,9 +124,7 @@ export default function Estoque() {
             <button
               onClick={() => setTipoFiltro("servico")}
               className={`px-3 py-1 rounded-md text-sm transition ${
-                tipoFiltro === "servico"
-                  ? "bg-red-600"
-                  : "hover:bg:white/5 text-zinc-300"
+                tipoFiltro === "servico" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"
               }`}
             >
               Serviços
@@ -154,15 +132,14 @@ export default function Estoque() {
           </div>
         </div>
 
+        {/* Form novo item / edição */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-red-500">
               {editando ? "Editar Item" : "Adicionar Novo Item"}
             </h2>
             {editando && (
-              <span className="text-xs text-zinc-300">
-                Editando: <strong>{editando.nome}</strong>
-              </span>
+              <span className="text-xs text-zinc-300">Editando: <strong>{editando.nome}</strong></span>
             )}
           </div>
 
@@ -174,7 +151,6 @@ export default function Estoque() {
               onChange={(e) => setNovoItem({ ...novoItem, nome: e.target.value })}
               className="bg-zinc-900 border border-white/10 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
             />
-
             <select
               value={novoItem.tipo}
               onChange={(e) => setNovoItem({ ...novoItem, tipo: e.target.value })}
@@ -183,29 +159,22 @@ export default function Estoque() {
               <option value="produto">Produto</option>
               <option value="servico">Serviço</option>
             </select>
-
             {novoItem.tipo === "produto" && (
               <input
                 type="number"
                 placeholder="Quantidade"
                 value={novoItem.quantidade}
-                onChange={(e) =>
-                  setNovoItem({ ...novoItem, quantidade: Number(e.target.value) })
-                }
+                onChange={(e) => setNovoItem({ ...novoItem, quantidade: Number(e.target.value) })}
                 className="bg-zinc-900 border border-white/10 text-white px-3 py-2 rounded w-32 focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             )}
-
             <input
               type="number"
               placeholder="Valor R$"
               value={novoItem.valor}
-              onChange={(e) =>
-                setNovoItem({ ...novoItem, valor: Number(e.target.value) })
-              }
+              onChange={(e) => setNovoItem({ ...novoItem, valor: Number(e.target.value) })}
               className="bg-zinc-900 border border-white/10 text-white px-3 py-2 rounded w-32 focus:outline-none focus:ring-2 focus:ring-red-600"
             />
-
             <button
               onClick={salvarItem}
               className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold ring-1 ring-white/10"
@@ -215,6 +184,7 @@ export default function Estoque() {
           </div>
         </div>
 
+        {/* Tabela */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 overflow-auto">
           <h2 className="text-lg font-semibold text-red-500 mb-2">Itens no Estoque</h2>
           <table className="w-full table-auto text-sm text-left">
@@ -232,41 +202,22 @@ export default function Estoque() {
                 <tr key={item._id} className="border-b border-white/10">
                   <td className="px-3 py-2">{item.nome}</td>
                   <td className="px-3 py-2 capitalize">{item.tipo}</td>
-                  <td className="px-3 py-2">
-                    {item.tipo === "produto" ? item.quantidade : "-"}
-                  </td>
-                  <td className="px-3 py-2">
-                    R$ {Number(item.valor ?? 0).toFixed(2)}
-                  </td>
+                  <td className="px-3 py-2">{item.tipo === "produto" ? item.quantidade : "-"}</td>
+                  <td className="px-3 py-2">R$ {Number(item.valor ?? 0).toFixed(2)}</td>
                   <td className="px-3 py-2 space-x-2">
-                    <button
-                      className="px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10"
-                      onClick={() => iniciarEdicao(item)}
-                      title="Editar"
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded bg-red-600 hover:bg-red-700 ring-1 ring-white/10"
-                      onClick={() => removerItem(item._id)}
-                      title="Remover"
-                    >
-                      🗑️
-                    </button>
+                    <button className="px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10" onClick={() => iniciarEdicao(item)} title="Editar">✏️</button>
+                    <button className="px-2 py-1 rounded bg-red-600 hover:bg-red-700 ring-1 ring-white/10" onClick={() => removerItem(item._id)} title="Remover">🗑️</button>
                   </td>
                 </tr>
               ))}
               {estoque.length === 0 && (
-                <tr>
-                  <td colSpan="5" className="text-center text-zinc-400 py-4">
-                    Nenhum item no estoque.
-                  </td>
-                </tr>
+                <tr><td colSpan="5" className="text-center text-zinc-400 py-4">Nenhum item no estoque.</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
+        {/* Gráfico */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-red-500">
@@ -281,11 +232,7 @@ export default function Estoque() {
                   <XAxis dataKey="nome" stroke="#a1a1aa" />
                   <YAxis stroke="#a1a1aa" />
                   <Tooltip
-                    contentStyle={{
-                      background: "#0b0b0b",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      color: "#fff",
-                    }}
+                    contentStyle={{ background: "#0b0b0b", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
                     cursor={{ fill: "rgba(255,255,255,0.05)" }}
                   />
                   <Bar dataKey="quantidade" fill="#dc2626" />

@@ -8,12 +8,8 @@ function GerenciarFuncionarios() {
   const { token, user } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
   const [form, setForm] = useState({
-    nome: "",
-    email: "",
-    senha: "",
-    tipo: "funcionario",
-    comissaoProduto: "",
-    comissaoServico: ""
+    nome: "", email: "", senha: "", tipo: "funcionario",
+    comissaoProduto: "", comissaoServico: ""
   });
   const [editando, setEditando] = useState(null);
 
@@ -42,14 +38,7 @@ function GerenciarFuncionarios() {
         });
       }
 
-      setForm({
-        nome: "",
-        email: "",
-        senha: "",
-        tipo: "funcionario",
-        comissaoProduto: "",
-        comissaoServico: ""
-      });
+      setForm({ nome: "", email: "", senha: "", tipo: "funcionario", comissaoProduto: "", comissaoServico: "" });
       setEditando(null);
       carregar();
     } catch (err) {
@@ -59,12 +48,8 @@ function GerenciarFuncionarios() {
 
   const editar = (u) => {
     setForm({
-      nome: u.nome,
-      email: u.email,
-      senha: "",
-      tipo: u.tipo,
-      comissaoProduto: u.comissaoProduto || "",
-      comissaoServico: u.comissaoServico || ""
+      nome: u.nome, email: u.email, senha: "",
+      tipo: u.tipo, comissaoProduto: u.comissaoProduto || "", comissaoServico: u.comissaoServico || ""
     });
     setEditando(u._id);
   };
@@ -82,6 +67,8 @@ function GerenciarFuncionarios() {
     if (token && user?.tipo === "admin") carregar();
   }, []);
 
+  const myUserId = user?._id || user?.id;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-red-900 text-white">
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
@@ -89,6 +76,7 @@ function GerenciarFuncionarios() {
           <span className="text-red-500">Gerenciar</span> Funcionários e Admins
         </h1>
 
+        {/* Card de formulário */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-3">
           <div className="grid md:grid-cols-2 gap-3">
             <input
@@ -141,17 +129,12 @@ function GerenciarFuncionarios() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={salvar}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold ring-1 ring-white/10"
-            >
+            <button onClick={salvar} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold ring-1 ring-white/10">
               {editando ? "Salvar Alterações" : "Cadastrar"}
             </button>
             {editando && (
               <button
-                onClick={() => { setEditando(null); setForm({
-                  nome: "", email: "", senha: "", tipo: "funcionario", comissaoProduto: "", comissaoServico: ""
-                }); }}
+                onClick={() => { setEditando(null); setForm({ nome: "", email: "", senha: "", tipo: "funcionario", comissaoProduto: "", comissaoServico: "" }); }}
                 className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10"
               >
                 Cancelar
@@ -160,6 +143,7 @@ function GerenciarFuncionarios() {
           </div>
         </div>
 
+        {/* Tabela */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead>
@@ -181,19 +165,11 @@ function GerenciarFuncionarios() {
                   <td className="px-3 py-2">{u.comissaoProduto ?? 0}%</td>
                   <td className="px-3 py-2">{u.comissaoServico ?? 0}%</td>
                   <td className="px-3 py-2 space-x-2">
-                    <button
-                      onClick={() => editar(u)}
-                      className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10"
-                      title="Editar"
-                    >
+                    <button onClick={() => editar(u)} className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10" title="Editar">
                       ✏️ Editar
                     </button>
-                    {user?._id !== u._id && (
-                      <button
-                        onClick={() => excluir(u._id)}
-                        className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white ring-1 ring-white/10"
-                        title="Excluir"
-                      >
+                    {myUserId !== u._id && (
+                      <button onClick={() => excluir(u._id)} className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white ring-1 ring-white/10" title="Excluir">
                         🗑️ Excluir
                       </button>
                     )}
@@ -202,9 +178,7 @@ function GerenciarFuncionarios() {
               ))}
               {usuarios.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="text-center text-zinc-400 py-4">
-                    Nenhum usuário cadastrado.
-                  </td>
+                  <td colSpan="6" className="text-center text-zinc-400 py-4">Nenhum usuário cadastrado.</td>
                 </tr>
               )}
             </tbody>
