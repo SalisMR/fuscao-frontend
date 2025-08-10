@@ -1,0 +1,12 @@
+﻿# sensíveis
+.env
+.env.*
+# node
+node_modules/
+# build
+dist/
+# SO
+.DS_Store
+Thumbs.db
+public/img/*.pdf
+public/img/*.exe
