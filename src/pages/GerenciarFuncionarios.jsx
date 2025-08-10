@@ -14,10 +14,14 @@ function GerenciarFuncionarios() {
   const [editando, setEditando] = useState(null);
 
   const carregar = async () => {
-    const res = await axios.get(`${API}/auth/usuarios`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setUsuarios(res.data);
+    try {
+      const res = await axios.get(`${API}/auth/usuarios`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsuarios(res.data);
+    } catch (e) {
+      console.error("Erro ao carregar usuários:", e);
+    }
   };
 
   const salvar = async () => {
@@ -65,7 +69,8 @@ function GerenciarFuncionarios() {
 
   useEffect(() => {
     if (token && user?.tipo === "admin") carregar();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user?.tipo]);
 
   const myUserId = user?._id || user?.id;
 
@@ -76,7 +81,7 @@ function GerenciarFuncionarios() {
           <span className="text-red-500">Gerenciar</span> Funcionários e Admins
         </h1>
 
-        {/* Card de formulário */}
+        {/* Formulário */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-3">
           <div className="grid md:grid-cols-2 gap-3">
             <input
@@ -168,7 +173,7 @@ function GerenciarFuncionarios() {
                     <button onClick={() => editar(u)} className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 ring-1 ring-white/10" title="Editar">
                       ✏️ Editar
                     </button>
-                    {myUserId !== u._id && (
+                    {(user?._id || user?.id) !== u._id && (
                       <button onClick={() => excluir(u._id)} className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white ring-1 ring-white/10" title="Excluir">
                         🗑️ Excluir
                       </button>

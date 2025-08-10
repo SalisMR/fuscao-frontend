@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useAuth } from "../context/AuthContext";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -12,16 +10,15 @@ export default function Estoque() {
   const [estoque, setEstoque] = useState([]);
   const [itensMaisVendidos, setItensMaisVendidos] = useState([]);
   const [tipoFiltro, setTipoFiltro] = useState("produto");
-  const [novoItem, setNovoItem] = useState({
-    nome: "", tipo: "produto", quantidade: 0, valor: 0,
-  });
+  const [novoItem, setNovoItem] = useState({ nome: "", tipo: "produto", quantidade: 0, valor: 0 });
   const [editando, setEditando] = useState(null);
 
   useEffect(() => {
     if (!token) return;
     buscarEstoque();
     buscarComandas();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const buscarEstoque = async () => {
     try {
@@ -111,36 +108,27 @@ export default function Estoque() {
           <h1 className="text-2xl font-bold tracking-tight">
             <span className="text-red-500">Gestão</span> de Estoque
           </h1>
-
           <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-1 flex">
             <button
               onClick={() => setTipoFiltro("produto")}
-              className={`px-3 py-1 rounded-md text-sm transition ${
-                tipoFiltro === "produto" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"
-              }`}
+              className={`px-3 py-1 rounded-md text-sm transition ${tipoFiltro === "produto" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"}`}
             >
               Produtos
             </button>
             <button
               onClick={() => setTipoFiltro("servico")}
-              className={`px-3 py-1 rounded-md text-sm transition ${
-                tipoFiltro === "servico" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"
-              }`}
+              className={`px-3 py-1 rounded-md text-sm transition ${tipoFiltro === "servico" ? "bg-red-600" : "hover:bg-white/5 text-zinc-300"}`}
             >
               Serviços
             </button>
           </div>
         </div>
 
-        {/* Form novo item / edição */}
+        {/* Formulário novo item / edição */}
         <div className="bg-black/60 backdrop-blur-md ring-1 ring-white/10 rounded-lg p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-red-500">
-              {editando ? "Editar Item" : "Adicionar Novo Item"}
-            </h2>
-            {editando && (
-              <span className="text-xs text-zinc-300">Editando: <strong>{editando.nome}</strong></span>
-            )}
+            <h2 className="text-lg font-semibold text-red-500">{editando ? "Editar Item" : "Adicionar Novo Item"}</h2>
+            {editando && <span className="text-xs text-zinc-300">Editando: <strong>{editando.nome}</strong></span>}
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -175,10 +163,7 @@ export default function Estoque() {
               onChange={(e) => setNovoItem({ ...novoItem, valor: Number(e.target.value) })}
               className="bg-zinc-900 border border-white/10 text-white px-3 py-2 rounded w-32 focus:outline-none focus:ring-2 focus:ring-red-600"
             />
-            <button
-              onClick={salvarItem}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold ring-1 ring-white/10"
-            >
+            <button onClick={salvarItem} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold ring-1 ring-white/10">
               {editando ? "Salvar Alterações" : "Adicionar Item"}
             </button>
           </div>
