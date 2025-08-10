@@ -1,4 +1,5 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+// src/App.jsx
+import { Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
@@ -20,51 +21,50 @@ function RequireAdmin({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route
-            path="/Admin"
-            element={
-              <RequireAuth>
-                <Admin />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/relatorios"
-            element={
-              <RequireAdmin>
-                <Relatorios />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/comanda"
-            element={
-              <RequireAuth>
-                <Comanda />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/estoque"
-            element={
-              <RequireAdmin>
-                <Estoque />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/GerenciarFuncionarios"
-            element={
-              <RequireAdmin>
-                <GerenciarFuncionarios />
-              </RequireAdmin>
-            }
-          />
-        </Routes>
-      </HashRouter>
+      {/* NÃO coloque Router aqui, o HashRouter já está em main.jsx */}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/Admin"
+          element={
+            <RequireAuth>
+              <Admin />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/relatorios"
+          element={
+            <RequireAdmin>
+              <Relatorios />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/comanda"
+          element={
+            <RequireAuth>
+              <Comanda />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/estoque"
+          element={
+            <RequireAdmin>
+              <Estoque />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/GerenciarFuncionarios"
+          element={
+            <RequireAdmin>
+              <GerenciarFuncionarios />
+            </RequireAdmin>
+          }
+        />
+      </Routes>
     </AuthProvider>
   );
 }
