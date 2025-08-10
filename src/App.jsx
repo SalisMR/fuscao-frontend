@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import Relatorios from "./pages/Relatorios";
 import Comanda from "./pages/Comanda";
 import Estoque from "./pages/Estoque";
-import GerenciarFuncionarios from "./pages/GerenciarFuncionarios"; // ✅ NOVO
+import GerenciarFuncionarios from "./pages/GerenciarFuncionarios";
 
 function RequireAuth({ children }) {
   const { token } = useAuth();
@@ -20,7 +20,7 @@ function RequireAdmin({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route
@@ -64,7 +64,7 @@ export default function App() {
             }
           />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   );
 }
