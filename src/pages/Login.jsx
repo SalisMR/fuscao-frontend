@@ -10,10 +10,13 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  // Base da API pega da variável de ambiente ou usa localhost no dev
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${API_BASE}/auth/login`, {
         email,
         senha,
       });
@@ -35,26 +38,23 @@ export default function Login() {
 
   return (
     <div className="relative min-h-[100dvh] flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-black via-zinc-900 to-red-900">
-      {/* Marca d’água da logo (gigante e suave) */}
       <img
-        src="/fusca.svg"               // troque para /img/fusca.png se preferir
+        src="/fusca.svg"
         alt=""
         className="pointer-events-none select-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 w-[1200px] max-w-none"
-        onError={(e) => {              // se não houver o arquivo, esconde a marca d'água
-          e.currentTarget.style.display = 'none';
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
         }}
         draggable="false"
       />
 
-      {/* Card de login */}
       <div className="relative z-10 w-full max-w-md text-white rounded-2xl bg-black/70 backdrop-blur-sm ring-1 ring-white/10 shadow-2xl p-8 md:p-10">
-        {/* Logo maior no topo do card */}
         <img
-          src="/fusca.svg"             // troque para /img/fusca.png se preferir
+          src="/fusca.svg"
           alt="FUSCÃO STOP CAR"
           className="h-16 md:h-20 mx-auto mb-4"
-          onError={(e) => {            // se não houver, esconde só essa
-            e.currentTarget.style.display = 'none';
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
           }}
           draggable="false"
         />
@@ -65,7 +65,9 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm mb-1">
+              Email
+            </label>
             <input
               id="email"
               name="email"
@@ -79,7 +81,9 @@ export default function Login() {
           </div>
 
           <div>
-            <label htmlFor="senha" className="block text-sm mb-1">Senha</label>
+            <label htmlFor="senha" className="block text-sm mb-1">
+              Senha
+            </label>
             <input
               id="senha"
               name="senha"
@@ -102,7 +106,9 @@ export default function Login() {
           </button>
 
           <div className="text-center text-sm mt-4">
-            <a href="#" className="text-white underline">Esqueci minha senha</a>
+            <a href="#" className="text-white underline">
+              Esqueci minha senha
+            </a>
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
